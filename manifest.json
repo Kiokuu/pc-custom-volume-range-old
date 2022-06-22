@@ -1,7 +1,7 @@
 {
   "name": "Custom Volume Range",
-  "version": "0.1.0",
-  "description": "Allows to set a user's volume over 200%",
-  "author": "PandaDriver#1584",
+  "version": "0.1.1",
+  "description": "Allows to set a user or screenshare's volume over 200%",
+  "author": "PandaDriver#1584 & Yato#4499",
   "license": "MIT"
 }

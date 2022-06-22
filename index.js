@@ -5,6 +5,7 @@ const { getModuleByDisplayName, i18n: { Messages }, React } = require('powercord
 const Settings = require('./Settings');
 
 const defaultMaxVolume = 400;
+const defaultMaxScreenShareVolume = 300; // It seems 300 is the max volume for screenshare that still functions.
 let pluginSettings;
 
 module.exports = class CustomVolumeRange extends Plugin {
@@ -24,10 +25,18 @@ module.exports = class CustomVolumeRange extends Plugin {
     adjustVolumeSlider() {
         const Slider = getModuleByDisplayName('Slider', false);
         inject('custom-volume-range', Slider.prototype, 'render', function (args) {
-            // pluginSettings must be a separate variable because 'this' refers to the module we inject into
-            const maxVolume = pluginSettings.get('maxAdjustableVolume', defaultMaxVolume);
-            // only change range if label is 'User volume'
-            if (this.props && this.props['aria-label'] === Messages.USER_VOLUME) {
+            if (this.props) {
+				var maxVolume = 200;
+				// only change range if label is 'User volume' or 'Stream volume'
+				if (this.props['aria-label']===Messages.USER_VOLUME){
+					maxVolume = pluginSettings.get('maxAdjustableVolume', defaultMaxVolume);
+				}
+				else if (this.props['aria-label']===Messages.STREAM_VOLUME){
+					maxVolume = pluginSettings.get('maxAdjustableScreenShareVolume', defaultMaxScreenShareVolume);
+				}
+				else{
+					return;
+				}
                 this.props.maxValue = maxVolume;
                 this.state.value = this.state.initialValueProp;
                 this.state.max = maxVolume;
